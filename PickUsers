@@ -1,0 +1,51 @@
+import React, { useState } from 'react';
+
+function PickUsers() {
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [maxSelectionsReached, setMaxSelectionsReached] = useState(false);
+
+  const users = [
+    { name: 'Alice', email: 'alice@example.com' },
+    // ... 9 more users
+  ];
+
+  const handleUserClick = (user) => {
+    if (selectedUsers.length < 10) {
+      setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, user]);
+    } else {
+      setMaxSelectionsReached(true);
+    }
+  };
+
+  const handleUserDeselect = (user) => {
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.filter((u) => u !== user)
+    );
+    setMaxSelectionsReached(false);
+  };
+
+  return (
+    <div>
+      <h1>Pick Users</h1>
+      <div className="user-list" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
+        {users.map((user) => (
+          <div key={user.email} className="user-item">
+            <input
+              type="checkbox"
+              checked={selectedUsers.includes(user)}
+              onChange={() => (selectedUsers.includes(user) ? handleUserDeselect(user) : handleUserClick(user))}
+            />
+            {user.name} - {user.email}
+          </div>
+        ))}
+      </div>
+      <p>
+        {selectedUsers.length} users selected.
+        {maxSelectionsReached && <span> Maximum selections reached.</span>}
+      </p>
+      <button disabled={selectedUsers.length === 0}>Submit</button>
+    </div>
+  );
+}
+
+export default PickUsers;
